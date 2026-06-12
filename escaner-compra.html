@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escáner de Compra — Dinero Mental</title>
+<meta name="description" content="Descubre qué sesgo cognitivo te está atacando antes de comprar. Herramienta gratuita de Dinero Mental.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#0D1B2A;min-height:100vh;font-family:'DM Sans',sans-serif}
+  .w{max-width:520px;margin:0 auto;background:#0D1B2A;min-height:100vh;padding-bottom:48px}
+  .hdr{padding:20px 24px 16px;border-bottom:0.5px solid rgba(245,240,232,0.1);display:flex;align-items:center;gap:12px}
+  .hdr-txt{font-size:17px;font-weight:800;color:#F5F0E8;letter-spacing:-0.2px}
+  .hdr-sub{font-size:11px;color:#F5A623;margin-top:1px}
+  .hero{padding:24px 24px 8px;text-align:center}
+  .hero h1{font-size:22px;font-weight:800;color:#F5F0E8;line-height:1.25;margin-bottom:8px}
+  .hero p{font-size:13px;color:rgba(245,240,232,0.55);line-height:1.6}
+  .sec{background:#0F2235;border:0.5px solid rgba(245,240,232,0.1);border-radius:14px;padding:20px;margin:12px 20px 0}
+  .lbl{font-size:11px;font-weight:700;color:#F5A623;text-transform:uppercase;letter-spacing:0.9px;margin-bottom:10px}
+  .inp{width:100%;background:#0D1B2A;border:0.5px solid rgba(245,240,232,0.18);border-radius:10px;padding:11px 14px;font-size:14px;color:#F5F0E8;font-family:inherit;outline:none;transition:border-color .2s}
+  .inp:focus{border-color:#F5A623}
+  .inp::placeholder{color:rgba(245,240,232,0.28)}
+  .sel{width:100%;background:#0D1B2A;border:0.5px solid rgba(245,240,232,0.18);border-radius:10px;padding:11px 14px;font-size:14px;color:#F5F0E8;font-family:inherit;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer}
+  .sel:focus{border-color:#F5A623}
+  .sel option{background:#0D1B2A}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+  .chip{background:transparent;border:0.5px solid rgba(245,240,232,0.18);border-radius:20px;padding:6px 13px;font-size:12px;color:rgba(245,240,232,0.55);cursor:pointer;transition:all .15s;font-family:inherit;-webkit-tap-highlight-color:transparent}
+  .chip:hover{border-color:#F5A623;color:#F5A623}
+  .chip.on{background:#F5A623;border-color:#F5A623;color:#0D1B2A;font-weight:700}
+  .cta{width:calc(100% - 40px);margin:18px 20px 0;background:#E8001D;border:none;border-radius:12px;padding:15px;font-size:15px;font-weight:700;color:#F5F0E8;cursor:pointer;font-family:inherit;letter-spacing:0.1px;transition:opacity .15s}
+  .cta:hover{opacity:.88}
+  .cta:disabled{opacity:.3;cursor:not-allowed}
+  .spin{text-align:center;padding:36px 20px;display:none}
+  .spin.on{display:block}
+  .dot{display:inline-block;width:7px;height:7px;background:#F5A623;border-radius:50%;margin:0 3px;animation:blink 1.2s ease-in-out infinite}
+  .dot:nth-child(2){animation-delay:.2s}
+  .dot:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,80%,100%{transform:scale(.6);opacity:.35}40%{transform:scale(1);opacity:1}}
+  .res{margin:0 20px;display:none}
+  .res.on{display:block}
+  .vcard{border-radius:14px;padding:22px;margin-bottom:12px;border:0.5px solid transparent;margin-top:16px}
+  .vcard.wait{background:#1a0805;border-color:rgba(232,0,29,.3)}
+  .vcard.ok{background:#04160d;border-color:rgba(29,158,117,.3)}
+  .vcard.warn{background:#1a1304;border-color:rgba(245,166,35,.35)}
+  .vtit{font-size:17px;font-weight:800;margin-bottom:6px}
+  .vcard.wait .vtit{color:#E8001D}
+  .vcard.ok .vtit{color:#1D9E75}
+  .vcard.warn .vtit{color:#F5A623}
+  .vtxt{font-size:13px;color:rgba(245,240,232,.65);line-height:1.6}
+  .scard{background:#0F2235;border:0.5px solid rgba(245,240,232,.1);border-radius:13px;padding:18px;margin-bottom:10px}
+  .sr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+  .sn{font-size:14px;font-weight:700;color:#F5A623}
+  .sp{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:600}
+  .sp.high{background:rgba(232,0,29,.12);color:#E8001D;border:0.5px solid rgba(232,0,29,.25)}
+  .sp.med{background:rgba(245,166,35,.12);color:#F5A623;border:0.5px solid rgba(245,166,35,.25)}
+  .sd{font-size:12px;color:rgba(245,240,232,.6);line-height:1.55}
+  .bar-bg{margin:8px 0 4px;background:rgba(245,240,232,.08);border-radius:4px;height:3px}
+  .bar-fg{height:3px;border-radius:4px;background:#E8001D;width:0%;transition:width .9s ease}
+  .costs{background:#0F2235;border:0.5px solid rgba(245,240,232,.1);border-radius:13px;padding:18px;margin-bottom:10px}
+  .ci{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:0.5px solid rgba(245,240,232,.06)}
+  .ci:last-child{border-bottom:none}
+  .cl{font-size:12px;color:rgba(245,240,232,.55)}
+  .cv{font-size:13px;font-weight:700;color:#F5F0E8}
+  .cv.hi{color:#F5A623}
+  .timing{background:#0F2235;border:0.5px solid rgba(245,240,232,.1);border-radius:13px;padding:18px;margin-bottom:10px}
+  .tbadge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:700;margin-bottom:9px}
+  .tbadge.g{background:rgba(29,158,117,.13);color:#1D9E75;border:0.5px solid rgba(29,158,117,.28)}
+  .tbadge.b{background:rgba(232,0,29,.1);color:#E8001D;border:0.5px solid rgba(232,0,29,.22)}
+  .tbadge.n{background:rgba(245,166,35,.1);color:#F5A623;border:0.5px solid rgba(245,166,35,.22)}
+  .ttxt{font-size:12px;color:rgba(245,240,232,.6);line-height:1.6}
+  .invest{background:#0F2235;border:0.5px solid rgba(245,240,232,.1);border-radius:13px;padding:18px;margin-bottom:10px}
+  .igrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .ibox{background:#0D1B2A;border-radius:10px;padding:12px;text-align:center}
+  .iy{font-size:11px;color:rgba(245,240,232,.45);margin-bottom:4px}
+  .iv{font-size:15px;font-weight:800;color:#F5A623}
+  .hist{background:#0F2235;border:0.5px solid rgba(245,240,232,.1);border-radius:13px;padding:18px;margin-bottom:10px}
+  .hitem{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid rgba(245,240,232,.06)}
+  .hitem:last-child{border-bottom:none}
+  .hdot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .hdot.wait{background:#E8001D}
+  .hdot.ok{background:#1D9E75}
+  .hdot.warn{background:#F5A623}
+  .hprod{font-size:13px;color:#F5F0E8;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .hprice{font-size:12px;color:rgba(245,240,232,.45);flex-shrink:0}
+  .hverdict{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:700;flex-shrink:0}
+  .hverdict.wait{background:rgba(232,0,29,.12);color:#E8001D}
+  .hverdict.ok{background:rgba(29,158,117,.12);color:#1D9E75}
+  .hverdict.warn{background:rgba(245,166,35,.12);color:#F5A623}
+  .patrones{background:#071420;border:0.5px solid rgba(245,166,35,.2);border-radius:13px;padding:16px;margin-bottom:10px}
+  .ptit{font-size:12px;font-weight:700;color:#F5A623;margin-bottom:8px}
+  .ptxt{font-size:12px;color:rgba(245,240,232,.6);line-height:1.6}
+  .share-card{background:#071420;border:0.5px solid rgba(245,240,232,.12);border-radius:14px;padding:20px;margin-bottom:10px;text-align:center}
+  .share-preview{background:#0D1B2A;border-radius:12px;padding:16px;margin:12px 0;text-align:left}
+  .share-btn{background:transparent;border:0.5px solid rgba(245,240,232,.25);border-radius:10px;padding:10px 18px;font-size:13px;color:rgba(245,240,232,.7);cursor:pointer;font-family:inherit;width:100%;transition:all .15s;margin-top:4px}
+  .share-btn:hover{border-color:#F5A623;color:#F5A623}
+  .copied{font-size:11px;color:#1D9E75;margin-top:8px;display:none;font-weight:700}
+  .regla{background:#0F2235;border-left:3px solid #F5A623;border-radius:0 12px 12px 0;padding:14px 16px;margin-bottom:10px}
+  .rtit{font-size:12px;font-weight:700;color:#F5A623;margin-bottom:5px}
+  .rtxt{font-size:12px;color:rgba(245,240,232,.6);line-height:1.55}
+  .rst{width:calc(100% - 40px);margin:14px 20px 0;background:transparent;border:0.5px solid rgba(245,240,232,.15);border-radius:11px;padding:12px;font-size:13px;color:rgba(245,240,232,.4);cursor:pointer;font-family:inherit;transition:all .15s}
+  .rst:hover{border-color:rgba(245,240,232,.35);color:rgba(245,240,232,.7)}
+  .footer{text-align:center;padding:28px 24px 0;font-size:11px;color:rgba(245,240,232,.25);line-height:1.7}
+  .footer a{color:#F5A623;text-decoration:none}
+  @media(max-width:420px){.row2{grid-template-columns:1fr}.igrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="w">
+
+  <div class="hdr">
+    <svg width="36" height="36" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <ellipse cx="40" cy="30" rx="26" ry="22" fill="#F5F0E8"/>
+      <ellipse cx="30" cy="28" rx="10" ry="14" fill="#F5F0E8"/>
+      <ellipse cx="50" cy="28" rx="10" ry="14" fill="#F5F0E8"/>
+      <path d="M40 18 Q38 12 34 14" stroke="#0D1B2A" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      <rect x="10" y="48" width="24" height="16" rx="5" fill="none" stroke="#E8001D" stroke-width="4"/>
+      <rect x="46" y="48" width="24" height="16" rx="5" fill="none" stroke="#E8001D" stroke-width="4"/>
+      <rect x="34" y="53" width="12" height="6" rx="1" fill="none" stroke="#E8001D" stroke-width="3"/>
+      <line x1="10" y1="54" x2="6" y2="56" stroke="#E8001D" stroke-width="3" stroke-linecap="round"/>
+      <line x1="70" y1="54" x2="74" y2="56" stroke="#E8001D" stroke-width="3" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <div class="hdr-txt">Dinero Mental</div>
+      <div class="hdr-sub">Entiende tu mente. Mejora tu dinero.</div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>Escáner de Compra</h1>
+    <p>Dime qué quieres comprar. Te digo qué sesgo te ataca, cuánto cuesta de verdad, si es buen momento y qué harías con ese dinero invertido.</p>
+  </div>
+
+  <div id="formWrap">
+    <div class="sec">
+      <div class="lbl">¿Qué quieres comprar?</div>
+      <input class="inp" id="prod" placeholder="ej. zapatillas New Balance 550" style="margin-bottom:12px">
+      <div class="row2">
+        <div><div class="lbl">Precio (€)</div><input class="inp" id="precio" type="number" placeholder="120" min="1"></div>
+        <div>
+          <div class="lbl">Categoría</div>
+          <select class="sel" id="cat">
+            <option value="">Selecciona</option>
+            <option value="moda">Ropa y calzado</option>
+            <option value="tech">Tecnología</option>
+            <option value="hogar">Hogar y deco</option>
+            <option value="ocio">Ocio y entretenimiento</option>
+            <option value="deporte">Deporte y fitness</option>
+            <option value="belleza">Belleza y cuidado personal</option>
+            <option value="viaje">Viajes y experiencias</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="lbl">Sueldo mensual aproximado</div>
+      <div class="chips" id="chips-sueldo">
+        <div class="chip" data-v="1000" onclick="pick(this,'sueldo')">Menos de 1.200€</div>
+        <div class="chip" data-v="1600" onclick="pick(this,'sueldo')">1.200 – 2.000€</div>
+        <div class="chip" data-v="2500" onclick="pick(this,'sueldo')">2.000 – 3.000€</div>
+        <div class="chip" data-v="3500" onclick="pick(this,'sueldo')">Más de 3.000€</div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="lbl">¿Por qué quieres comprarlo? (puedes marcar varios)</div>
+      <div class="chips" id="chips-mot">
+        <div class="chip" data-v="nec" onclick="pick(this,'mot',1)">Lo necesito de verdad</div>
+        <div class="chip" data-v="rec" onclick="pick(this,'mot',1)">Merezco un capricho</div>
+        <div class="chip" data-v="ofe" onclick="pick(this,'mot',1)">Está de oferta</div>
+        <div class="chip" data-v="lim" onclick="pick(this,'mot',1)">Es edición limitada</div>
+        <div class="chip" data-v="soc" onclick="pick(this,'mot',1)">Alguien que conozco lo tiene</div>
+        <div class="chip" data-v="abu" onclick="pick(this,'mot',1)">Estoy aburrido/a</div>
+        <div class="chip" data-v="ans" onclick="pick(this,'mot',1)">He tenido una semana dura</div>
+        <div class="chip" data-v="ide" onclick="pick(this,'mot',1)">Dice algo de quién soy</div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="lbl">¿Llevas más de 48h pensando en esto?</div>
+      <div class="chips" id="chips-t48">
+        <div class="chip" data-v="no" onclick="pick(this,'t48')">No, lo vi hace poco</div>
+        <div class="chip" data-v="si" onclick="pick(this,'t48')">Sí, llevo días pensando</div>
+      </div>
+    </div>
+  </div>
+
+  <button class="cta" id="btnScan" onclick="scan()" disabled>Analizar mi compra</button>
+
+  <div class="spin" id="spin">
+    <div style="margin-bottom:14px"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+    <p id="spinTxt" style="font-size:13px;color:rgba(245,240,232,.45)">Analizando tu compra...</p>
+  </div>
+
+  <div class="res" id="res"></div>
+  <button class="rst" id="btnRst" onclick="resetForm()" style="display:none">← Analizar otra compra</button>
+
+  <div class="footer">
+    Una herramienta gratuita de <a href="https://youtube.com/@DineroMental" target="_blank">Dinero Mental</a><br>
+    Basada en los trabajos de Kahneman, Cialdini y Festinger.<br>
+    No almacena ningún dato tuyo.
+  </div>
+
+</div>
+
+<script>
+const S={sueldo:null,mot:[],t48:null};
+const hist=[];
+
+const sesgos={
+  rec:{n:'Autoindulgencia',d:'Tu cerebro busca una recompensa emocional inmediata. Esa sensación dura entre 20 y 60 minutos. El cargo en cuenta, semanas.'},
+  ofe:{n:'Sesgo del precio de referencia',d:'Solo se ahorra dinero en cosas que ibas a comprar de todas formas. El descuento en lo demás es simplemente un precio más bajo, no un ahorro.'},
+  lim:{n:'FOMO (miedo a perderte algo)',d:'La escasez artificial activa el miedo primitivo a quedarse fuera. Las marcas crean urgencia fabricada exactamente para esto.'},
+  soc:{n:'Prueba social',d:'Tu cerebro responde a una señal de pertenencia al grupo. Cialdini lo documentó hace décadas. Las marcas lo usan exactamente igual hoy.'},
+  abu:{n:'Compra por estimulación',d:'Buscar, comparar y añadir al carrito genera dopamina en sí mismo. No es la cosa que quieres — es la sensación de quererla.'},
+  ans:{n:'Regulación emocional',d:'Usar el consumo para calmar el estrés funciona a muy corto plazo y deja una deuda emocional (y real) después.'},
+  ide:{n:'Señalización identitaria',d:'Compramos para comunicar quiénes queremos ser. El objeto no cambia la identidad, solo la señaliza temporalmente.'},
+  nec:{n:'Evaluación racional',d:'Tienes una necesidad real identificada. Buen punto de partida. Aun así analiza el momento y el coste real antes de actuar.'}
+};
+
+const timing={
+  moda:[{m:1,n:'Rebajas de enero',a:35},{m:6,n:'Rebajas de verano',a:40},{m:11,n:'Black Friday',a:25},{m:12,n:'Rebajas pre-Navidad',a:18}],
+  tech:[{m:11,n:'Black Friday',a:20},{m:1,n:'Rebajas enero',a:12},{m:7,n:'Prime Day',a:18}],
+  hogar:[{m:1,n:'Rebajas enero',a:25},{m:6,n:'Rebajas verano',a:20},{m:11,n:'Black Friday',a:20}],
+  ocio:[{m:11,n:'Black Friday',a:25},{m:12,n:'Navidad',a:15}],
+  deporte:[{m:1,n:'Rebajas enero',a:30},{m:6,n:'Rebajas verano',a:25},{m:11,n:'Black Friday',a:20}],
+  belleza:[{m:11,n:'Black Friday',a:25},{m:5,n:'Día de la Madre',a:15}],
+  viaje:[{m:1,n:'Enero low cost',a:20},{m:9,n:'Septiembre low cost',a:22}],
+  otro:[{m:11,n:'Black Friday',a:18}]
+};
+
+function pick(el,g,multi){
+  if(!multi){
+    document.querySelectorAll('#chips-'+g+' .chip').forEach(c=>c.classList.remove('on'));
+    el.classList.add('on');
+    S[g]=el.dataset.v;
+  } else {
+    el.classList.toggle('on');
+    const v=el.dataset.v;
+    el.classList.contains('on')?(!S[g].includes(v)&&S[g].push(v)):(S[g]=S[g].filter(x=>x!==v));
+  }
+  chk();
+}
+
+function chk(){
+  const ok=document.getElementById('prod').value.trim()&&parseFloat(document.getElementById('precio').value)>0&&document.getElementById('cat').value&&S.sueldo&&S.mot.length>0&&S.t48;
+  document.getElementById('btnScan').disabled=!ok;
+}
+
+['prod','precio'].forEach(id=>document.getElementById(id).addEventListener('input',chk));
+document.getElementById('cat').addEventListener('change',chk);
+
+function getTiming(cat,precio){
+  const evs=timing[cat]||timing.otro;
+  const mes=new Date().getMonth()+1;
+  let best=null,minD=13;
+  for(const e of evs){
+    let d=e.m-mes; if(d<0)d+=12;
+    if(d===0)return{t:'g',txt:'Estamos en el mes de '+e.n+'. Es uno de los mejores momentos del año para esta categoría. Si ibas a comprarlo de todas formas, ahora tiene sentido.',save:Math.round(precio*e.a/100),ev:e.n};
+    if(d<minD){minD=d;best=e;}
+  }
+  const save=Math.round(precio*(best?best.a:18)/100);
+  if(minD<=2)return{t:'b',txt:'En '+minD+' mes'+(minD>1?'es':'')+" llega "+best.n+'. Esperar podría ahorrarte unos '+fmtEur(save)+' ('+best.a+'% habitual en esta categoría). Merece la pena anotarlo.',save,ev:best.n};
+  return{t:'n',txt:'No hay oferta inmediata prevista. El próximo evento relevante es '+best.n+' en '+minD+' meses. Ahorro estimado: '+fmtEur(save)+'. Si no es urgente, una alarma en el móvil puede ser suficiente.',save,ev:best.n};
+}
+
+function getVeredicto(mot,t48,precio,sueldo){
+  const pct=precio/sueldo*100;
+  const emoc=mot.filter(m=>m!=='nec');
+  if(mot.includes('nec')&&emoc.length===0&&t48==='si')return'ok';
+  if(emoc.length>=2||(!mot.includes('nec')&&t48==='no')||pct>15)return'wait';
+  return'warn';
+}
+
+function fmtEur(n){return n.toLocaleString('es-ES',{maximumFractionDigits:0})+'€'}
+function compound(p,y,r){return Math.round(p*Math.pow(1+r,y))}
+
+function getPatron(){
+  if(hist.length<2)return null;
+  const freq={};
+  hist.forEach(h=>h.sesgos.forEach(s=>{freq[s]=(freq[s]||0)+1;}));
+  const top=Object.entries(freq).sort((a,b)=>b[1]-a[1])[0];
+  if(top&&top[1]>=2&&sesgos[top[0]])return{sesgo:sesgos[top[0]].n,count:top[1],total:hist.length};
+  return null;
+}
+
+function scan(){
+  const prod=document.getElementById('prod').value.trim();
+  const precio=parseFloat(document.getElementById('precio').value);
+  const cat=document.getElementById('cat').value;
+  const sueldo=parseFloat(S.sueldo);
+
+  document.getElementById('formWrap').style.display='none';
+  document.getElementById('btnScan').style.display='none';
+  document.getElementById('spin').classList.add('on');
+
+  const msgs=['Analizando los sesgos activos...','Calculando el coste real...','Consultando el calendario de ofertas...','Proyectando el coste de oportunidad...'];
+  let mi=0;
+  const iv=setInterval(()=>{if(mi<msgs.length)document.getElementById('spinTxt').textContent=msgs[mi++];},650);
+
+  setTimeout(()=>{
+    clearInterval(iv);
+    document.getElementById('spin').classList.remove('on');
+
+    const veredicto=getVeredicto(S.mot,S.t48,precio,sueldo);
+    const tim=getTiming(cat,precio);
+    const emoc=S.mot.filter(m=>m!=='nec');
+    const sp=emoc[0]||null;
+    const intensidad=emoc.length>=3?92:emoc.length===2?68:emoc.length===1?42:15;
+    const horasTrabajo=(precio/(sueldo/160)).toFixed(1);
+    const pctSueldo=(precio/sueldo*100).toFixed(1);
+    const cenas=Math.round(precio/22);
+    const c5=compound(precio,5,0.07);
+    const c10=compound(precio,10,0.07);
+    const c20=compound(precio,20,0.07);
+
+    hist.push({prod,precio,veredicto,sesgos:S.mot.filter(m=>m!=='nec')});
+
+    const vtextos={
+      ok:{tit:'Compra consciente',ico:'✓',txt:'Tu razonamiento tiene base racional. Llevas tiempo pensando y responde a una necesidad real. Hazlo con calma — y aplica igualmente la regla del coste real antes de confirmar.'},
+      warn:{tit:'Señal de alerta',ico:'⚠',txt:'Hay señales mixtas. Parte del impulso puede ser emocional. Antes de comprar, escribe en papel una razón que no sea emocional. Si no puedes, espera 48 horas.'},
+      wait:{tit:'Espera 48 horas',ico:'◷',txt:'Tu cerebro te vende una coartada, no un argumento. Hay '+emoc.length+' sesgo'+(emoc.length!==1?'s':'')+' activo'+(emoc.length!==1?'s':'')+' trabajando ahora mismo. Guarda el enlace del producto y vuelve en dos días.'}
+    };
+    const vd=vtextos[veredicto];
+
+    const shareText='Mi escáner de compra dice:\n\n"'+prod+'" — '+fmtEur(precio)+'\n\nVeredicto: '+vd.tit+'\nSesgo detectado: '+(sp?sesgos[sp].n:'Ninguno')+'\nEso mismo invertido a 20 años: '+fmtEur(c20)+'\n\n#DineroMental — dineromental.es/escanear';
+    window._shareText=shareText;
+
+    let html='';
+
+    html+='<div class="vcard '+veredicto+'"><div style="font-size:22px;margin-bottom:8px">'+vd.ico+'</div><div class="vtit">'+vd.tit+'</div><div class="vtxt">'+vd.txt+'</div></div>';
+
+    if(sp){
+      const s=sesgos[sp];
+      html+='<div class="scard"><div class="sr"><div class="sn">'+s.n+'</div><div class="sp high">Intensidad '+intensidad+'%</div></div><div class="bar-bg"><div class="bar-fg" id="bar1"></div></div><div class="sd">'+s.d+'</div></div>';
+      if(emoc.length>1){
+        const s2=sesgos[emoc[1]];
+        html+='<div class="scard"><div class="sr"><div class="sn">'+s2.n+'</div><div class="sp med">Secundario</div></div><div class="sd">'+s2.d+'</div></div>';
+      }
+    }
+
+    html+='<div class="costs"><div class="lbl">El coste real de "'+prod+'"</div>';
+    html+='<div class="ci"><span class="cl">Precio de etiqueta</span><span class="cv">'+fmtEur(precio)+'</span></div>';
+    html+='<div class="ci"><span class="cl">% de tu sueldo mensual</span><span class="cv'+(parseFloat(pctSueldo)>10?' hi':'')+'">'+pctSueldo+'%</span></div>';
+    html+='<div class="ci"><span class="cl">Horas de trabajo equivalentes</span><span class="cv">'+horasTrabajo+'h</span></div>';
+    html+='<div class="ci"><span class="cl">Cenas con amigos equivalentes</span><span class="cv">'+cenas+' cena'+(cenas!==1?'s':'')+'</span></div></div>';
+
+    html+='<div class="invest"><div class="lbl">Si invirtieras esos '+fmtEur(precio)+' en lugar de gastarlos</div>';
+    html+='<div class="sd" style="margin-bottom:6px">Proyección con 7% anual (rentabilidad histórica media del S&P 500):</div>';
+    html+='<div class="igrid">';
+    html+='<div class="ibox"><div class="iy">En 5 años</div><div class="iv">'+fmtEur(c5)+'</div></div>';
+    html+='<div class="ibox"><div class="iy">En 10 años</div><div class="iv">'+fmtEur(c10)+'</div></div>';
+    html+='<div class="ibox" style="grid-column:1/-1"><div class="iy">En 20 años</div><div class="iv" style="font-size:19px">'+fmtEur(c20)+'</div></div>';
+    html+='</div></div>';
+
+    html+='<div class="timing"><div class="lbl">¿Es buen momento para comprar?</div>';
+    html+='<div class="tbadge '+tim.t+'">'+(tim.t==='g'?'✓ Buen momento':tim.t==='b'?'✗ Espera — ahorra '+fmtEur(tim.save):'~ Momento neutro')+'</div>';
+    html+='<div class="ttxt">'+tim.txt+'</div></div>';
+
+    const patron=getPatron();
+    if(patron){
+      html+='<div class="patrones"><div class="ptit">Patrón detectado en tu historial</div><div class="ptxt">En '+patron.total+' análisis recientes, el sesgo de <strong style="color:#F5A623">'+patron.sesgo+'</strong> ha aparecido '+patron.count+' veces. No es casualidad — es un patrón de comportamiento.</div></div>';
+    }
+
+    if(hist.length>1){
+      html+='<div class="hist"><div class="lbl">Tus últimas compras analizadas</div>';
+      const vl={ok:'Consciente',warn:'Alerta',wait:'Espera 48h'};
+      hist.slice().reverse().forEach(h=>{
+        html+='<div class="hitem"><div class="hdot '+h.veredicto+'"></div><div class="hprod">'+h.prod+'</div><div class="hprice">'+fmtEur(h.precio)+'</div><div class="hverdict '+h.veredicto+'">'+vl[h.veredicto]+'</div></div>';
+      });
+      html+='</div>';
+    }
+
+    const reglas={
+      wait:{t:'Tu herramienta: la regla de las 48h',d:'Guarda el enlace del producto y pon una alarma para pasado mañana. Si sigues queriéndolo igual, entonces decide. El deseo se enfría solo en la mayoría de los casos.'},
+      warn:{t:'Tu herramienta: el argumento inverso',d:'Escribe una razón para comprarlo que no implique ninguna emoción. Solo funcional. Si no puedes escribirla, es una coartada.'},
+      ok:{t:'Tu herramienta: para que entre, tiene que salir',d:'¿Qué vas a sacar del armario o cajón para dejarle sitio? Esa pregunta mantiene la honestidad a largo plazo.'}
+    };
+    const r=reglas[veredicto];
+    html+='<div class="regla"><div class="rtit">'+r.t+'</div><div class="rtxt">'+r.d+'</div></div>';
+
+    html+='<div class="share-card"><div class="lbl" style="text-align:center;margin-bottom:8px">Comparte tu resultado</div>';
+    html+='<div class="share-preview">';
+    html+='<div style="font-size:11px;color:#F5A623;font-weight:700;margin-bottom:8px">DINERO MENTAL · ESCÁNER DE COMPRA</div>';
+    html+='<div style="font-size:14px;font-weight:700;color:#F5F0E8;margin-bottom:4px">"'+prod+'" — '+fmtEur(precio)+'</div>';
+    html+='<div style="font-size:12px;color:rgba(245,240,232,.5);margin-bottom:8px">Sesgo: '+(sp?sesgos[sp].n:'Ninguno')+' · A 20 años: '+fmtEur(c20)+'</div>';
+    html+='<div style="font-size:13px;font-weight:800;color:'+(veredicto==='ok'?'#1D9E75':veredicto==='wait'?'#E8001D':'#F5A623')+'">'+vd.tit+'</div>';
+    html+='</div>';
+    html+='<button class="share-btn" onclick="copyShare()">Copiar para compartir en stories o comentarios</button>';
+    html+='<div class="copied" id="copiedMsg">¡Copiado al portapapeles!</div></div>';
+
+    const resDiv=document.getElementById('res');
+    resDiv.innerHTML=html;
+    resDiv.classList.add('on');
+    document.getElementById('btnRst').style.display='block';
+
+    setTimeout(()=>{const b=document.getElementById('bar1');if(b)b.style.width=intensidad+'%';},120);
+  },2800);
+}
+
+function copyShare(){
+  if(navigator.clipboard&&window._shareText){
+    navigator.clipboard.writeText(window._shareText).then(()=>{
+      const el=document.getElementById('copiedMsg');
+      if(el){el.style.display='block';setTimeout(()=>{el.style.display='none';},2500);}
+    });
+  }
+}
+
+function resetForm(){
+  document.getElementById('formWrap').style.display='block';
+  document.getElementById('btnScan').style.display='block';
+  document.getElementById('btnScan').disabled=true;
+  document.getElementById('res').classList.remove('on');
+  document.getElementById('res').innerHTML='';
+  document.getElementById('btnRst').style.display='none';
+  document.getElementById('prod').value='';
+  document.getElementById('precio').value='';
+  document.getElementById('cat').value='';
+  S.sueldo=null;S.mot=[];S.t48=null;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+}
+</script>
+</body>
+</html>
